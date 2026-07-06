@@ -1,0 +1,133 @@
+/* Luxury feminine theme tweaks (in addition to DaisyUI) */
+
+:root {
+    --lux-pink: #ff4fd8;
+    --lux-purple: #7c3aed;
+    --lux-gold: #f5c542;
+    --lux-teal: #22c55e;
+}
+
+/* Subtle fade-in animation utilities */
+@keyframes bb-fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bb-animate-fadeUp {
+    animation: bb-fadeUp 700ms ease both;
+}
+
+.bb-float {
+    animation: bb-float 5s ease-in-out infinite;
+}
+
+@keyframes bb-float {
+
+    0%,
+    100% {
+        transform: translateY(0)
+    }
+
+    50% {
+        transform: translateY(-8px)
+    }
+}
+
+/* Hero overlay */
+.bb-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.75rem;
+}
+
+.bb-hero::before {
+    content: "";
+    position: absolute;
+    inset: -40% -30% auto -30%;
+    height: 220%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 79, 216, .35), rgba(124, 58, 237, .12) 40%, transparent 70%);
+    pointer-events: none;
+}
+
+.bb-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(124, 58, 237, .18), rgba(245, 197, 66, .12));
+    pointer-events: none;
+}
+
+/* Glow card */
+.bb-glow {
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(255, 255, 255, .10);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .20);
+}
+
+.bb-gradient-text {
+    background: linear-gradient(90deg, var(--lux-gold), var(--lux-pink), var(--lux-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Image card polish */
+.bb-photo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(255, 255, 255, .08);
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.bb-photo-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(245, 197, 66, .45);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+
+.bb-photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.05) contrast(1.02);
+}
+
+.bb-photo-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, .55));
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.bb-photo-card:hover::after {
+    opacity: 1;
+}
+
+.bb-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem .85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 197, 66, .35);
+    background: rgba(245, 197, 66, .08);
+    color: rgba(255, 255, 255, .92);
+}
+
+/* Fancy divider */
+.bb-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245, 197, 66, .55), transparent);
+}

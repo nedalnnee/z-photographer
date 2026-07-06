@@ -1,0 +1,6 @@
+# Uploaded files are user content, never executable code.
+php_flag engine off
+
+<FilesMatch "\.(php|phtml|php\d|phar|pl|py|cgi|asp|aspx|sh|exe)$">
+  Require all denied
+</FilesMatch>

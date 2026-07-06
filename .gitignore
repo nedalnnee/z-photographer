@@ -1,0 +1,17 @@
+# Dependencies (regenerate with `composer install`)
+/vendor/
+
+# Environment-specific config (copy from the .example files)
+/config/db.php
+/config/app.php
+
+# User-uploaded content
+/public/uploads/photos/*
+!/public/uploads/photos/.gitkeep
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

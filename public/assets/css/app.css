@@ -1,0 +1,5 @@
+/* Tailwind/DaisyUI are loaded via CDN for now. This file is reserved for future custom theme tweaks. */
+
+:root {
+    color-scheme: dark;
+}
