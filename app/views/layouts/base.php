@@ -1,8 +1,7 @@
 <?php
-use Core\I18n;
-$langMeta = I18n::currentLanguage();
-$lang = $langMeta['code'] ?? 'en';
-$dir = ($langMeta['direction'] ?? 'ltr') === 'rtl' ? 'rtl' : 'ltr';
+use Core\Lang;
+$lang = Lang::current();
+$dir = Lang::dir($lang);
 
 // استخراج رسائل التنبيه من الجلسة ومسحها
 $flash = $_SESSION['flash'] ?? [];

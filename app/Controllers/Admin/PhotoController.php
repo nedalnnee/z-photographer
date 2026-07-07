@@ -20,24 +20,24 @@ final class PhotoController
         ob_start();
         $content = '<div class="space-y-6">'
             . '<div class="flex items-center justify-between">'
-            . '<div><h1 class="text-4xl font-black tracking-tight text-base-content">Photo <span class="text-rose-500">Gallery</span></h1>'
-            . '<p class="text-base-content/60">Manage your visual assets.</p></div>'
-            . '<a href="?r=/admin/photos/upload" class="btn bg-gradient-to-r from-rose-400 to-pink-500 text-white border-none rounded-xl shadow-lg">Upload Art</a>'
+            . '<div><h1 class="text-4xl font-black tracking-tight text-base-content">' . htmlspecialchars(t('admin.photos.title_pre')) . ' <span class="text-rose-500">' . htmlspecialchars(t('admin.photos.title_span')) . '</span></h1>'
+            . '<p class="text-base-content/60">' . htmlspecialchars(t('admin.photos.subtitle')) . '</p></div>'
+            . '<a href="?r=/admin/photos/upload" class="btn bg-gradient-to-r from-rose-400 to-pink-500 text-white border-none rounded-xl shadow-lg">' . htmlspecialchars(t('admin.photos.upload_art')) . '</a>'
             . '</div>';
 
         $content .= '<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">';
-        
+
         foreach ($photos as $photo) {
             $id = (string)$photo['id'];
             $slug = Security::e((string)$photo['slug']);
             $filename = Security::e((string)$photo['file_basename']);
             // التأكد من أن المسار يبدأ من المجلد العام
-            $imageUrl = 'uploads/photos/' . $filename; 
+            $imageUrl = 'uploads/photos/' . $filename;
             $content .= '<div class="group relative aspect-square glass-card rounded-2xl overflow-hidden photo-hover-effect p-1">'
                 . '<img src="' . $imageUrl . '" class="w-full h-full object-cover rounded-xl" alt="' . $slug . '">'
                 . '<div class="absolute inset-1 bg-rose-500/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-2 rounded-xl">'
                 . '<span class="text-white text-[10px] font-bold uppercase">' . $slug . '</span>'
-                . '<form method="POST" action="?r=/admin/photos/delete" onsubmit="return confirm(\'Delete photo?\')">'
+                . '<form method="POST" action="?r=/admin/photos/delete" onsubmit="return confirm(\'' . htmlspecialchars(t('common.confirm_delete'), ENT_QUOTES) . '\')">'
                 . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">'
                 . '<input type="hidden" name="id" value="' . $id . '">'
                 . '<button class="btn btn-xs btn-circle bg-white text-error border-none hover:bg-error hover:text-white">✕</button></form>'
@@ -49,8 +49,6 @@ final class PhotoController
             . '</div></div>';
 
         $title = 'Manage Gallery';
-        $lang = $_SESSION['lang'] ?? 'en';
-        $dir = $_SESSION['lang'] === 'ar' ? 'rtl' : 'ltr';
         require __DIR__ . '/../../views/layouts/base.php';
         return (string)ob_get_clean();
     }
@@ -60,27 +58,25 @@ final class PhotoController
         Auth::requireRole('admin');
         $pdo = Db::pdo();
         $albums = $pdo->query("SELECT id, slug FROM albums WHERE status = 'active' ORDER BY slug ASC")->fetchAll();
-        
-        $albumOptions = '<option value="">None (Standalone Art)</option>';
+
+        $albumOptions = '<option value="">' . htmlspecialchars(t('admin.photos.standalone')) . '</option>';
         foreach ($albums as $alb) {
             $albumOptions .= '<option value="' . $alb['id'] . '">' . Security::e($alb['slug']) . '</option>';
         }
 
         $csrf = Security::csrfToken();
         ob_start();
-        $content = '<div class="max-w-2xl mx-auto py-10"><div class="text-center mb-8"><h1 class="text-4xl font-black text-rose-500">Upload Art</h1></div>'
+        $content = '<div class="max-w-2xl mx-auto py-10"><div class="text-center mb-8"><h1 class="text-4xl font-black text-rose-500">' . htmlspecialchars(t('admin.photos.upload_title')) . '</h1></div>'
             . '<div class="glass-card rounded-[2.5rem] p-10 text-center border-dashed border-2 border-rose-200">'
             . '<form method="POST" action="?r=/admin/photos/store" enctype="multipart/form-data" class="space-y-6">'
             . "<input type=\"hidden\" name=\"csrf_token\" value=\"{$csrf}\">"
-            . '<div class="form-control mb-4 text-left"><label class="label"><span class="label-text font-bold text-rose-400">Select Album</span></label>'
+            . '<div class="form-control mb-4 text-left"><label class="label"><span class="label-text font-bold text-rose-400">' . htmlspecialchars(t('admin.photos.select_album')) . '</span></label>'
             . '<select name="album_id" class="select select-bordered border-rose-100 rounded-xl w-full">' . $albumOptions . '</select></div>'
             . '<input type="file" name="photos[]" multiple class="file-input file-input-bordered file-input-primary w-full max-w-xs" />'
-            . '<div class="pt-4"><button class="btn bg-rose-500 text-white border-none rounded-xl px-10">Start Upload</button></div>'
+            . '<div class="pt-4"><button class="btn bg-rose-500 text-white border-none rounded-xl px-10">' . htmlspecialchars(t('admin.photos.start_upload')) . '</button></div>'
             . '</form></div></div>';
-        
+
         $title = 'Upload Photos';
-        $lang = $_SESSION['lang'] ?? 'en';
-        $dir = $_SESSION['lang'] === 'ar' ? 'rtl' : 'ltr';
         require __DIR__ . '/../../views/layouts/base.php';
         return (string)ob_get_clean();
     }
@@ -143,8 +139,8 @@ final class PhotoController
         }
 
         $_SESSION['flash']['success'] = $rejected > 0
-            ? "Photos uploaded. {$rejected} file(s) were rejected (not a valid image)."
-            : 'Photos uploaded and added to gallery.';
+            ? t('flash.photos_uploaded_partial', ['count' => $rejected])
+            : t('flash.photos_uploaded');
         header('Location: ?r=/admin/photos');
         exit;
     }
@@ -158,7 +154,7 @@ final class PhotoController
             $pdo = Db::pdo();
             $pdo->prepare("UPDATE photos SET status = 'deleted' WHERE id = ?")->execute([$id]);
         }
-        $_SESSION['flash']['success'] = 'Photo removed successfully.';
+        $_SESSION['flash']['success'] = t('flash.photo_deleted');
         header('Location: ?r=/admin/photos');
         exit;
     }

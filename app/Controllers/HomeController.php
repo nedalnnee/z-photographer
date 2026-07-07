@@ -18,8 +18,6 @@ final class HomeController
         $content = ob_get_clean();
 
         $title = 'Home - Photography Portfolio';
-        $lang = $_SESSION['lang'] ?? 'en';
-        $dir = $lang === 'ar' ? 'rtl' : 'ltr';
 
         ob_start();
         require __DIR__ . '/../views/layouts/base.php';

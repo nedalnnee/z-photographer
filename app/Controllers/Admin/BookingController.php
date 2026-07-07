@@ -19,12 +19,12 @@ final class BookingController
 
         ob_start();
         $content = '<div class="flex items-center justify-between mb-6">'
-            . '<div><h1 class="text-4xl font-black tracking-tight text-base-content">Bookings</h1>'
-            . '<p class="text-base-content/60">Manage your upcoming photography sessions.</p></div>'
+            . '<div><h1 class="text-4xl font-black tracking-tight text-base-content">' . htmlspecialchars(t('admin.bookings.title')) . '</h1>'
+            . '<p class="text-base-content/60">' . htmlspecialchars(t('admin.bookings.subtitle')) . '</p></div>'
             . '</div>'
             . '<div class="glass-card rounded-[2.5rem] overflow-hidden">'
             . '<div class="overflow-x-auto"><table class="table w-full">'
-            . '<thead><tr class="text-rose-400 border-b border-rose-100"><th>Client</th><th>Service</th><th>Date</th><th>Status</th><th class="text-right">Actions</th></tr></thead>'
+            . '<thead><tr class="text-rose-400 border-b border-rose-100"><th>' . htmlspecialchars(t('admin.bookings.th_client')) . '</th><th>' . htmlspecialchars(t('admin.bookings.th_service')) . '</th><th>' . htmlspecialchars(t('admin.bookings.th_date')) . '</th><th>' . htmlspecialchars(t('admin.bookings.th_status')) . '</th><th class="text-right">' . htmlspecialchars(t('admin.bookings.th_actions')) . '</th></tr></thead>'
             . '<tbody>';
 
         foreach ($bookings as $b) {
@@ -44,20 +44,20 @@ final class BookingController
                 default => 'badge-ghost'
             };
 
-            $confirmBtn = ($status !== 'confirmed') ? 
+            $confirmBtn = ($status !== 'confirmed') ?
                 '<form method="POST" action="?r=/admin/bookings/update" class="inline">'
-                . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">' 
+                . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">'
                 . '<input type="hidden" name="id" value="' . $id . '"><input type="hidden" name="status" value="confirmed">'
-                . '<button class="btn btn-sm btn-ghost text-rose-500 font-bold" type="submit">Confirm</button></form>' : '';
+                . '<button class="btn btn-sm btn-ghost text-rose-500 font-bold" type="submit">' . htmlspecialchars(t('admin.bookings.confirm')) . '</button></form>' : '';
 
-            $rejectBtn = ($status !== 'rejected') ? 
+            $rejectBtn = ($status !== 'rejected') ?
                 '<form method="POST" action="?r=/admin/bookings/update" class="inline">'
-                . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">' 
+                . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">'
                 . '<input type="hidden" name="id" value="' . $id . '"><input type="hidden" name="status" value="rejected">'
-                . '<button class="btn btn-sm btn-ghost text-error" type="submit">Reject</button></form>' : '';
+                . '<button class="btn btn-sm btn-ghost text-error" type="submit">' . htmlspecialchars(t('admin.bookings.reject')) . '</button></form>' : '';
 
             $archiveBtn = '<form method="POST" action="?r=/admin/bookings/update" class="inline">'
-                . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">' 
+                . '<input type="hidden" name="csrf_token" value="' . Security::csrfToken() . '">'
                 . '<input type="hidden" name="id" value="' . $id . '"><input type="hidden" name="status" value="archived">'
                 . '<button class="btn btn-sm btn-ghost text-base-content/30" title="Archive">✕</button></form>';
 
@@ -74,8 +74,6 @@ final class BookingController
         $content .= '</tbody></table></div></div></div>';
 
         $title = 'Manage Bookings';
-        $lang = $_SESSION['lang'] ?? 'en';
-        $dir = $_SESSION['lang'] === 'ar' ? 'rtl' : 'ltr';
         require __DIR__ . '/../../views/layouts/base.php';
         return (string)ob_get_clean();
     }
@@ -90,7 +88,7 @@ final class BookingController
         $allowed = ['confirmed', 'rejected', 'pending', 'new', 'archived'];
 
         if ($id === '' || !in_array($status, $allowed, true)) {
-            $_SESSION['flash']['error'] = 'Invalid booking update.';
+            $_SESSION['flash']['error'] = t('flash.booking_invalid_update');
             header('Location: ?r=/admin/bookings');
             exit;
         }
@@ -99,7 +97,7 @@ final class BookingController
         $stmt = $pdo->prepare('UPDATE bookings SET status = ? WHERE id = ?');
         $stmt->execute([$status, $id]);
 
-        $_SESSION['flash']['success'] = 'Booking updated.';
+        $_SESSION['flash']['success'] = t('flash.booking_updated');
         header('Location: ?r=/admin/bookings');
         exit;
     }

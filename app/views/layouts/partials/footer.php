@@ -7,6 +7,6 @@
         <a href="#" class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all duration-300">FB</a>
         <a href="#" class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all duration-300">TW</a>
     </div>
-    <p class="text-xs opacity-50 uppercase tracking-widest">© <?= date('Y') ?> All rights reserved. Crafted with ✨</p>
+    <p class="text-xs opacity-50 uppercase tracking-widest"><?= htmlspecialchars(t('footer.rights', ['year' => date('Y')])) ?></p>
   </div>
 </footer>

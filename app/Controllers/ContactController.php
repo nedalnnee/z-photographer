@@ -17,8 +17,6 @@ final class ContactController
         $content = ob_get_clean();
 
         $title = 'Contact Us';
-        $lang = $_SESSION['lang'] ?? 'en';
-        $dir = $lang === 'ar' ? 'rtl' : 'ltr';
         require __DIR__ . '/../views/layouts/base.php';
         return (string)ob_get_clean();
     }
@@ -37,9 +35,9 @@ final class ContactController
             $stmt = $pdo->prepare("INSERT INTO contacts (full_name, email, subject, message, status, created_at) VALUES (?, ?, ?, ?, 'unread', NOW())");
             $stmt->execute([$name, $email, $subject, $message]);
             
-            $_SESSION['flash']['success'] = 'Your message has been sent. We will get back to you soon.';
+            $_SESSION['flash']['success'] = t('flash.contact_success');
         } else {
-            $_SESSION['flash']['error'] = 'Please fill in all required fields.';
+            $_SESSION['flash']['error'] = t('flash.contact_error');
         }
 
         header('Location: ?r=/contact');

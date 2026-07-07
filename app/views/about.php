@@ -3,8 +3,8 @@ ob_start();
 ?>
 <div class="max-w-4xl mx-auto space-y-8 py-10">
   <div class="text-center">
-    <span class="px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-rose-100 text-rose-600">The Artist</span>
-    <h1 class="text-5xl font-black mt-4 tracking-tight">About the <span class="text-rose-500">Photographer</span></h1>
+    <span class="px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-rose-100 text-rose-600"><?= htmlspecialchars(t('about.badge')) ?></span>
+    <h1 class="text-5xl font-black mt-4 tracking-tight"><?= htmlspecialchars(t('about.title_pre')) ?> <span class="text-rose-500"><?= htmlspecialchars(t('about.title_span')) ?></span></h1>
   </div>
 
   <div class="glass-card rounded-[2.5rem] overflow-hidden animate-float">
@@ -15,11 +15,11 @@ ob_start();
         </div>
         <div class="flex-1 text-center md:text-left">
           <p class="text-xl text-base-content/80 leading-relaxed font-medium">
-            Capturing the essence of beauty through a boutique lens. Based in the heart of aesthetics, specializing in wedding narratives and fine art portraiture.
+            <?= htmlspecialchars(t('about.bio1')) ?>
           </p>
           <div class="mt-6 h-[1px] bg-rose-100"></div>
           <p class="mt-6 text-base-content/60">
-            This is a boutique digital space capturing life's most tender narratives. Tailored for high-end celebrations, romantic imagery, and premium visual branding.
+            <?= htmlspecialchars(t('about.bio2')) ?>
           </p>
         </div>
       </div>
@@ -29,6 +29,4 @@ ob_start();
 <?php
 $content = ob_get_clean();
 $title = $title ?? 'About';
-$lang = 'en';
-$dir = 'ltr';
 require __DIR__ . '/layouts/base.php';
